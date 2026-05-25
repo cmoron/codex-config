@@ -1,0 +1,55 @@
+model = "gpt-5.5"
+model_reasoning_effort = "high"
+personality = "pragmatic"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+notify = ["/home/cyril/src/codex-config/scripts/notify-sound.sh"]
+
+[tui]
+notifications = true
+status_line = ["model-with-reasoning", "five-hour-limit", "weekly-limit", "context-window-size", "context-remaining", "current-dir", "git-branch", "task-progress"]
+status_line_use_colors = true
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+
+[projects."/home/cyril/src/claude-config"]
+trust_level = "trusted"
+
+[projects."/home/cyril/src/codex-config"]
+trust_level = "trusted"
+
+[projects."/home/cyril/src/mypacer"]
+trust_level = "trusted"
+
+[projects."/home/cyril/src/mypacer/mypacer_infra"]
+trust_level = "trusted"
+
+[projects."/home/cyril/src/pioum"]
+trust_level = "trusted"
+
+[projects."/home/cyril/src/mypacer-platform/mypacer_club"]
+trust_level = "trusted"
+
+[projects."/home/cyril"]
+trust_level = "trusted"
+
+[plugins."github@openai-curated"]
+enabled = false
+
+[mcp_servers.context7]
+url = "https://mcp.context7.com/mcp"
+env_http_headers = { "CONTEXT7_API_KEY" = "CONTEXT7_API_KEY" }
+
+[notice.model_migrations]
+"gpt-5.1-codex-max" = "gpt-5.3-codex"
+"gpt-5.3-codex" = "gpt-5.4"
+
+[hooks.state]
+
+[hooks.state."/home/cyril/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:ac371f260e4b23ba1d1b7a4ad68a44a323a8470b61f38471a47aceac1b7a5a7c"
+
+[hooks.state."/home/cyril/.codex/hooks.json:pre_tool_use:0:0"]
+enabled = true
+trusted_hash = "sha256:fc87dbee1cb8a9be4f78ba094c4fa8d5e2fd38cb800854e3717f9b6a52fe2a47"

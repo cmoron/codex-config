@@ -1,0 +1,5 @@
+# Persistent approval rules for Codex CLI.
+#
+# Keep this file intentionally small. Add specific prefixes only after they have
+# proven useful and safe in day-to-day work.
+prefix_rule(pattern=["rm", "-rf", "codex-config"], decision="allow")
