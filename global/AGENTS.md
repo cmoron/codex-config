@@ -101,8 +101,9 @@ Skills deployes par `~/src/codex-config/install.sh` dans `~/.codex/skills/`.
 Les skills portent les competences; les agents definissent les metiers.
 
 - `codex-config` : modifier cette configuration Codex source.
+- `autoship` : produire une petite feature/fix en autonomie totale quand demande explicitement.
 - `mvp` : demarrer un MVP/POC avec les stacks preferees.
-- `grill-me` : challenger un plan/design par questions successives.
+- `grill-with-docs` : challenger un plan/design avec glossaire `CONTEXT.md` et ADR.
 - `nvim-config` : modifier la configuration Neovim personnelle.
 - `openclaw` : travailler sur Nestor/openclaw et son deploiement.
 - `stack-python` : conventions Python, uv, ruff, mypy, pytest.
@@ -113,6 +114,20 @@ Les skills portent les competences; les agents definissent les metiers.
 
 Ne pas ajouter de plugin ou MCP sans demande explicite. Les integrations Claude
 Linear/Notion ne sont pas supposees disponibles dans Codex par defaut.
+
+## Auto-Amelioration
+
+Quand un pattern se degage du travail, cristallise-le dans la configuration :
+
+- Declencheur : procedure repetee 2-3 fois, correction recurrente de Cyril, ou
+  piege evite de justesse.
+- Quoi : proposer un skill neuf, l'evolution d'un skill existant, ou une ligne
+  d'instruction globale si c'est vraiment transversal.
+- Quand : aux frontieres de tache/session, jamais au milieu d'une implementation.
+- Comment : proposer un diff ou appliquer l'edition si la demande porte deja sur
+  la config; pas de commit auto.
+- Garde-fous : pas d'over-skilling; edition chirurgicale; mini-eval pour un skill
+  sensible avant de s'y fier.
 
 ## Stack De Reference
 

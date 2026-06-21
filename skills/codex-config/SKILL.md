@@ -19,7 +19,7 @@ jamais directement dans `~/.codex`.
 ├── skills/                # Skills personnels Codex
 ├── scripts/               # Helpers de notification
 ├── assets/                # Assets utilitaires
-├── install.sh             # Symlinks idempotents vers ~/.codex/
+├── install.sh             # Symlinks WSL + copies Windows idempotents
 └── update.sh              # Pull fast-forward + install
 ```
 
@@ -28,8 +28,10 @@ jamais directement dans `~/.codex`.
 1. Lire les fichiers existants avant modification.
 2. Garder les changements scopes a la demande.
 3. Ne pas ajouter de plugin ou MCP sans demande explicite.
-4. Relancer `./install.sh` apres modification pour remettre les symlinks en place.
+4. Relancer `./install.sh` apres modification pour remettre les symlinks/copies en place.
 5. Verifier avec au minimum `bash -n install.sh update.sh scripts/*.sh`.
+6. Si un skill est ajoute/supprime/renomme, tenir `global/AGENTS.md` et `README.md`
+   synchronises.
 
 ## Conventions
 
@@ -37,3 +39,8 @@ jamais directement dans `~/.codex`.
 - Preferer ASCII dans les fichiers de config sauf besoin explicite.
 - Conventional commits.
 - Ne jamais modifier ou supprimer les skills systeme dans `~/.codex/skills/.system`.
+- `install.sh` purge les symlinks de skills geres par ce repo qui ont disparu de
+  la source; ne pas contourner ce deploiement declaratif.
+- Sous WSL2, `install.sh` copie aussi les fichiers geres vers
+  `/mnt/c/Users/$USER/.codex` si ce dossier existe. Ne pas symlinker cette cible :
+  l'application Windows doit lire des fichiers reels.
