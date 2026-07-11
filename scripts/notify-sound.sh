@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-SOUND="$HOME/src/codex-config/assets/warcraft-3-paysan-travail-termine.mp3"
+SOUND="$HOME/.codex/assets/warcraft-3-paysan-travail-termine.mp3"
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
   afplay "$SOUND" &

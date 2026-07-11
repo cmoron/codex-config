@@ -1,7 +1,7 @@
 # codex-config
 
-Configuration personnelle de Codex CLI : instructions globales, config TOML, règles
-d'approbation, skills personnels, scripts utilitaires et assets.
+Configuration personnelle partagee par Codex CLI et l'application : instructions
+globales, config TOML, hooks, regles de securite, plugins, skills et preferences UI.
 
 ## Installation
 
@@ -10,8 +10,10 @@ cd ~/src/codex-config
 ./install.sh
 ```
 
-L'installation est idempotente. Elle crée des sauvegardes datées avant de remplacer
-des fichiers existants non symlinkés dans `~/.codex`.
+L'installation est idempotente. Elle cree des sauvegardes datees avant de remplacer
+des fichiers existants dans `~/.codex`. Les fichiers que Codex peut reecrire sont
+copies; scripts, assets et skills sont symlinkes. L'etat de confiance des hooks est
+preserve lors des reinstallations.
 
 Sous WSL2, `install.sh` déploie aussi la configuration pour l'application Codex
 Windows quand `/mnt/c/Users/$USER/.codex` existe. Cette cible reçoit des copies
@@ -36,12 +38,13 @@ cd ~/src/codex-config
 
 | Source | Cible | Rôle |
 | --- | --- | --- |
-| `global/AGENTS.md` | `~/.codex/AGENTS.md` + Windows si detecte | Instructions globales Codex |
+| `global/AGENTS.md` | `~/.codex/AGENTS.md` + Windows si detecte | Instructions globales Codex (copie) |
 | `AGENTS.md` | repo root | Instructions specifiques a ce repo |
-| `config.toml` | `~/.codex/config.toml` + Windows si detecte | Modèle, projets trusted, plugins |
-| `rules/default.rules` | `~/.codex/rules/default.rules` + Windows si detecte | Approbations persistantes |
-| `skills/*` | `~/.codex/skills/*` + Windows si detecte | Skills personnels Codex |
-| `scripts/` | `~/.codex/scripts/` + Windows si detecte | Notification sonore |
+| `config.toml` | `~/.codex/config.toml` + Windows si detecte | Reglages communs, TUI, Desktop et plugins (copie) |
+| `hooks.json` | `~/.codex/hooks.json` + Windows si detecte | Protection des fichiers, formatage, RTK et rappel de fin (copie) |
+| `rules/default.rules` | `~/.codex/rules/default.rules` + Windows si detecte | Interdictions de commandes destructrices (copie) |
+| `skills/*` | `~/.agents/skills/*` (`~/.codex/skills/*` sous Windows) | Skills personnels Codex |
+| `scripts/` | `~/.codex/scripts/` + Windows si detecte | Implementations des hooks et notification |
 | `assets/` | `~/.codex/assets/` + Windows si detecte | MP3 de fin de travail |
 
 ## Skills Personnels
@@ -60,13 +63,15 @@ cd ~/src/codex-config
 | `api-design` | Conception API REST/GraphQL |
 | `deployment` | CI/CD GitHub Actions, Docker Compose, serveurs Debian/Ubuntu |
 
-Les skills Claude dépendants de MCPs non configurés côté Codex (`linear`,
-`notion`) ne sont pas portés ici pour respecter la règle projet : ne pas ajouter
-de plugin ou MCP sans demande explicite.
+Les skills Claude dependants de MCPs non configures cote Codex (`linear`,
+`notion`) ne sont pas portes. Les historiques, memoires et caches restent propres
+a chaque produit.
 
-Les plugins et outils Claude-only (`claude-code-setup`, `graphify` comme skill
-auto-enregistre, `superpowers`, `claude-mem`, etc.) ne sont pas installes par ce
-repo Codex.
+`install.sh` installe les marketplaces Mixedbread, Anthropic et Ponytail dans un
+`CODEX_HOME` temporaire relie aux caches locaux, puis active les plugins compatibles
+declares dans `config.toml`. Les chemins et timestamps de cache ne sont pas versionnes.
+`security-guidance` reste desactive : ses hooks Anthropic utilisent des champs
+`Stop` et `SessionStart` que Codex 0.144.1 rejette.
 
 ## Statusline
 
@@ -74,18 +79,26 @@ Codex CLI configure sa statusbar native via `tui.status_line` dans
 `config.toml`. La configuration active affiche le modèle avec niveau de
 raisonnement, le répertoire courant, la branche git et le contexte restant.
 
-## Context7
+## App et TUI
 
-Context7 est configure comme serveur MCP remote dans `config.toml`.
+Les reglages communs vivent a la racine de `config.toml`. `[tui]` configure la
+statusline du terminal; `[desktop]` conserve les preferences stables de l'app
+(theme, follow-ups, niveau de detail et cible d'ouverture).
 
-Pour l'authentifier sans committer de secret, exposer la cle API dans
-l'environnement :
+Computer Use, Node REPL, hashes de confiance, notices de migration, caches et
+marketplaces locales generes par l'app ne sont pas versionnes.
 
-```bash
-export CONTEXT7_API_KEY=ctx7sk-...
-```
+Les mutations runtime de l'app ou du CLI restent dans `~/.codex/config.toml` et
+ne salissent pas le depot. Relancer `install.sh` reapplique la source stable tout
+en conservant la table dynamique `[hooks.state]`.
 
-Codex transmet cette variable au serveur via le header `CONTEXT7_API_KEY`.
+## Hooks
+
+- `protect-env.sh` bloque les patchs vers `.env` et `.env.*`.
+- `format-on-save.sh` lance le formatter deja installe pour les fichiers modifies.
+- RTK et Atuin sont utilises quand leurs binaires sont disponibles.
+- `reflect-nudge.sh` renvoie toujours du JSON valide pour le contrat `Stop` Codex.
+- La notification sonore utilise `notify`, pas un hook `Stop`.
 
 ## Notification sonore
 
@@ -100,6 +113,7 @@ macOS, WSL2 et fallback terminal bell.
 ├── global/
 │   └── AGENTS.md
 ├── config.toml
+├── hooks.json
 ├── rules/
 │   └── default.rules
 ├── skills/
@@ -115,7 +129,13 @@ macOS, WSL2 et fallback terminal bell.
 │   ├── stack-rust/
 │   └── stack-ts/
 ├── scripts/
-│   └── notify-sound.sh
+│   ├── format-on-save.sh
+│   ├── notify-sound.sh
+│   ├── protect-env.sh
+│   └── reflect-nudge.sh
+├── tests/
+│   ├── test-hooks.sh
+│   └── test-install.sh
 ├── assets/
 │   └── warcraft-3-paysan-travail-termine.mp3
 ├── install.sh

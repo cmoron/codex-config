@@ -1,55 +1,104 @@
-model = "gpt-5.5"
-model_reasoning_effort = "high"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "xhigh"
 personality = "pragmatic"
 approval_policy = "never"
 sandbox_mode = "danger-full-access"
-notify = ["/home/cyril/src/codex-config/scripts/notify-sound.sh"]
+notify = ["/bin/sh", "-lc", 'exec "$HOME/.codex/scripts/notify-sound.sh"']
 
 [tui]
 notifications = true
 status_line = ["model-with-reasoning", "five-hour-limit", "weekly-limit", "context-window-size", "context-remaining", "current-dir", "git-branch", "task-progress"]
 status_line_use_colors = true
 
-[tui.model_availability_nux]
-"gpt-5.5" = 4
+[desktop]
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = true
+followUpQueueMode = "queue"
+dock-icon-preference = "app-default"
+appearanceLightCodeThemeId = "gruvbox"
+selected-avatar-id = "hoots"
+show-context-window-usage = true
+git-pull-request-merge-method = "squash"
 
-[projects."/home/cyril/src/claude-config"]
-trust_level = "trusted"
+[desktop.open-in-target-preferences]
+global = "ghostty"
 
-[projects."/home/cyril/src/codex-config"]
-trust_level = "trusted"
+[desktop.appearanceLightChromeTheme]
+accent = "#458588"
+contrast = 45
+ink = "#3c3836"
+opaqueWindows = false
+surface = "#fbf1c7"
 
-[projects."/home/cyril/src/mypacer"]
-trust_level = "trusted"
+[desktop.appearanceLightChromeTheme.semanticColors]
+diffAdded = "#3c3836"
+diffRemoved = "#cc241d"
+skill = "#b16286"
 
-[projects."/home/cyril/src/mypacer/mypacer_infra"]
-trust_level = "trusted"
+[features]
+memories = true
 
-[projects."/home/cyril/src/pioum"]
-trust_level = "trusted"
+[memories]
+generate_memories = true
+use_memories = true
 
-[projects."/home/cyril/src/mypacer-platform/mypacer_club"]
-trust_level = "trusted"
+[marketplaces.Mixedbread-Grep]
+source_type = "git"
+source = "https://github.com/mixedbread-ai/mgrep.git"
 
-[projects."/home/cyril"]
-trust_level = "trusted"
+[marketplaces.claude-plugins-official]
+source_type = "git"
+source = "https://github.com/anthropics/claude-plugins-official.git"
 
-[plugins."github@openai-curated"]
+[marketplaces.ponytail]
+source_type = "git"
+source = "https://github.com/DietrichGebert/ponytail.git"
+ref = "main"
+
+[plugins."mgrep@Mixedbread-Grep"]
+enabled = true
+
+[plugins."clangd-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."claude-code-setup@claude-plugins-official"]
+enabled = true
+
+[plugins."claude-md-management@claude-plugins-official"]
+enabled = true
+
+[plugins."context7@claude-plugins-official"]
+enabled = true
+
+[plugins."frontend-design@claude-plugins-official"]
+enabled = true
+
+[plugins."playwright@claude-plugins-official"]
+enabled = true
+
+[plugins."pyright-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."rust-analyzer-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."security-guidance@claude-plugins-official"]
 enabled = false
 
-[mcp_servers.context7]
-url = "https://mcp.context7.com/mcp"
-env_http_headers = { "CONTEXT7_API_KEY" = "CONTEXT7_API_KEY" }
-
-[notice.model_migrations]
-"gpt-5.1-codex-max" = "gpt-5.3-codex"
-"gpt-5.3-codex" = "gpt-5.4"
-
-[hooks.state]
-
-[hooks.state."/home/cyril/.codex/hooks.json:post_tool_use:0:0"]
-trusted_hash = "sha256:ac371f260e4b23ba1d1b7a4ad68a44a323a8470b61f38471a47aceac1b7a5a7c"
-
-[hooks.state."/home/cyril/.codex/hooks.json:pre_tool_use:0:0"]
+[plugins."skill-creator@claude-plugins-official"]
 enabled = true
-trusted_hash = "sha256:fc87dbee1cb8a9be4f78ba094c4fa8d5e2fd38cb800854e3717f9b6a52fe2a47"
+
+[plugins."superpowers@claude-plugins-official"]
+enabled = true
+
+[plugins."typescript-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."ponytail@ponytail"]
+enabled = true
+
+[projects."/Users/cyril/src/codex-config"]
+trust_level = "trusted"
+
+[projects."/Users/cyril/src/lotusim-lab"]
+trust_level = "trusted"

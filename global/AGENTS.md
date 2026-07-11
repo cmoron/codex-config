@@ -1,150 +1,103 @@
-# Codex — Cyril Moron
+# Codex
 
-Instructions comportementales communes a tout projet. Les instructions locales
-du depot priment quand elles sont plus specifiques.
+Guidelines comportementales communes a tout projet. A completer avec les instructions specifiques.
 
-## Avant De Coder
+## Avant de coder
 
-- Explorer le contexte utile du projet : README, docs, fichiers similaires,
-  configuration et tests existants.
-- Si la demande est ambigue ou si deux approches se valent vraiment, poser une
-  question courte avant d'implementer.
-- Si une solution locale plus simple existe, la proposer avant de partir sur une
-  approche plus lourde.
-- Si la demande pousse vers un anti-pattern, le signaler clairement.
-- Calibrer l'effort avant de choisir le process.
+- Explore le contexte du projet (README.md, docs, fichiers sources significatifs).
+- Si tu as du mal a interpreter ma demande ou si tu hesites entre plusieurs approches, demande : je prefere une question a 200 lignes a refaire.
+- Si tu vois plus simple que ce que je demande, propose-le avant d'implementer.
+- Si tu vois que ma demande mene a un anti-pattern, previens-moi.
+- Evalue l'echelle d'effort pour calibrer le process.
 
-## Echelle D'Effort
+## Echelle d'effort
 
 Sur-processer une petite tache gaspille du temps et des tokens.
 
-| Taille | Signaux | Process |
-| --- | --- | --- |
-| XS | Typo, fix 1 ligne, config simple | Direct : diagnostiquer, corriger, verifier. Pas de plan. |
-| S | Feature simple, 1 couche, jusqu'a 3 fichiers | Plan inline 3-5 bullets si utile, code, tests. |
-| M | Plusieurs fichiers/couches, arbitrage API/UX | Plan court, execution par tranches verticales, validations intermediaires. |
-| L+ | Migration, refactor transverse, travail multi-jours | Plan explicite ou ADR avant implementation, decoupage en PRs. |
+- **XS** (typo, fix 1 ligne, config) : direct. Pas de plan, pas de skill superpowers.
+- **S** (1 feature simple, jusqu'a 3 fichiers) : plan inline 3-5 bullets, code, tests, commit.
+- **M** (multi-couches ou decisions UX/API a arbitrer) : `superpowers:brainstorming` puis execution inline.
+- **L+** (multi-jours, refactor transverse, migration) : full superpowers (`superpowers:writing-plans` puis `superpowers:subagent-driven-development`).
 
-Garde-fou : avant de dispatcher des sous-agents ou de lancer un gros plan,
-estimer cout en tokens et wallclock. Si le travail estime est inferieur a 8h de
-dev, demander confirmation explicite avant d'utiliser un workflow lourd.
+Garde-fou : avant `superpowers:subagent-driven-development`, estime le cout en tokens et wallclock. Si le travail est estime a moins de 8h de dev, demande-moi confirmation explicite avec le chiffrage.
 
-Anti-patterns a eviter :
+## Delegation
 
-- Plan massif pour une tache qui tient en une PR.
-- Sous-agents pour une edition triviale.
-- Refactor de stack sans verifier une solution locale plus simple.
-- Abstraction "au cas ou" sans complexite reelle a absorber.
+Le modele principal reste l'orchestrateur : architecture, arbitrages, debug difficile et synthese. A partir de M, delegue quand il y a du volume ou du parallelisme et que le resultat est bon marche a verifier.
 
-## Pendant Le Code
+- Deterministe : script, hook ou commande, sans sous-agent.
+- Mecanique a volume : sous-agent d'exploration.
+- Implementation bien specifiee : sous-agent implementer avec spec et tests.
+- Sous-probleme complexe : sous-agent reviewer ou generaliste.
+- XS/S restent inline.
 
-- Faire le minimum qui resout le probleme.
-- Garder les changements scopes a la demande; ne pas toucher au code voisin non
-  lie.
-- Si du dead code non lie apparait, le signaler au lieu de le supprimer.
-- Pas de `catch` silencieux. Pas de `unwrap` hors tests. Une erreur remonte ou
-  est traitee explicitement.
-- Tests avec le code, pas comme decoration apres coup. Pour un bug, ecrire
-  d'abord un test qui le reproduit quand c'est praticable.
-- Respecter les scripts, formatters et linters du projet. Eviter les
-  reformattages massifs non lies.
-- Preferer les commandes non interactives.
-- Si le worktree est sale, ne jamais revert les changements non lies; travailler
-  autour.
+Si la surface Codex ne permet pas de choisir un modele par sous-agent, conserve ce decoupage par role sans inventer de selecteur de modele.
 
-## Avant De Dire "Fait"
+## Pendant que tu codes
 
-Preuve d'execution obligatoire quand elle est possible : tests qui passent, app
-qui demarre, endpoint qui repond, commande de validation executee. "Ca devrait
-marcher" n'est pas suffisant.
+- Le minimum qui resout le probleme. Pas d'abstraction au cas ou, pas de config pour plus tard, pas de gestion d'erreur pour des cas impossibles.
+- Pas de `catch` silencieux. Pas de `unwrap` hors tests. Une erreur remonte ou est traitee, jamais avalee.
+- Edition chirurgicale : ne touche pas au code voisin sans rapport. Signale le dead code non lie sans le supprimer.
+- Tests avec le code, pas apres. Pour un bug, ecris d'abord un test qui le reproduit, puis corrige.
+- Le formatage passe par les hooks du projet; ne le relance pas manuellement.
 
-Si une verification ne peut pas etre lancee localement, le dire explicitement et
-indiquer le risque residuel.
+## Avant de dire que c'est fait
+
+Preuve d'execution obligatoire : tests qui passent, app qui demarre, endpoint qui repond. Si tu ne peux pas verifier toi-meme, dis-le explicitement.
 
 ## Git
 
-- Git lineaire : rebase, pas de merge commits.
-- Conventional Commits : le message explique le pourquoi, pas seulement le quoi.
-- Pas de `wip`, pas de `update` vague.
-- Pas de `--no-verify`.
-- Pas de force-push sauf demande explicite.
-- Commit seulement si demande explicite ou workflow du projet deja etabli.
+- Lineaire : rebase, pas de merge commits.
+- Conventional Commits, message = pourquoi, pas le quoi.
+- Pas de `--no-verify`, pas de force push hors branche personnelle.
 
-## Toolchains
+## Stacks
 
-- Python : `uv` pour deps/envs, `ruff` pour lint + format, `mypy` pour types,
-  `pytest` pour tests. CLI : `typer` + `rich` par defaut.
-- JavaScript/TypeScript : `bun` uniquement pour runtime, package manager,
-  bundler et tests. Ne pas utiliser `npm`, `pnpm`, `yarn` ou `node` sauf
-  contrainte explicite du projet.
-- Rust : `cargo`, `rustfmt`, `clippy`; pas de `unwrap` hors tests.
+- Python : `uv`, jamais `pip` ou `poetry`. Details dans `stack-python`.
+- TypeScript/JavaScript : `bun`, jamais `npm`, `yarn`, `pnpm` ou `node` direct. Details dans `stack-ts`.
+- Rust : `cargo` et clippy pedantic. Details dans `stack-rust`.
 
 ## Outils
 
-| Besoin | Preference | Fallback |
+| Besoin | Preference | Fallback si indisponible ou en echec |
 | --- | --- | --- |
 | Recherche contenu semantique | `mgrep "query"` | `rg`, puis recherche integree |
 | Recherche regex/litterale | `rg` | recherche integree |
 | Recherche structure multi-lignes | `ast-grep` / `sg` | lecture ciblee |
 | Recherche fichiers | `fd` | `rg --files`, puis glob |
-| Gros fichier inconnu | lire par sections avec `sed -n` | lecture complete si court |
-| Documentation de bibliotheque | Context7 quand disponible | web cible sur source officielle |
-| Web | rechercher seulement si info volatile, demande explicite ou precision requise | citer les sources |
-| JSON / YAML | `jq` / `yq` | parseur structure, pas de dump massif |
+| Explorer un fichier inconnu de plus de 200 lignes | sous-agent Explore | lecture ciblee par sections |
+| Web | `mgrep --web --answer` | recherche web ciblee, en prevenant |
+| Documentation de bibliotheque | plugin `context7` | web sur la source officielle |
+| Extraction JSON/YAML | `jq` / `yq` | parseur structure, jamais un dump massif |
 
-Le pattern general : preference forte, fallback pragmatique. Si l'outil prefere
-echoue, le dire brievement et basculer.
+La preference est forte, mais si elle echoue, dis-le et utilise le fallback.
 
-## Skills Personnels
+## RTK
 
-Skills deployes par `~/src/codex-config/install.sh` dans `~/.codex/skills/`.
-Les skills portent les competences; les agents definissent les metiers.
+- Le hook `rtk hook claude` reecrit automatiquement les commandes supportees quand `rtk` est installe.
+- Utilise directement `rtk read`, `rtk err`, `rtk log`, `rtk json` ou `rtk summary` quand leur sortie filtree est utile.
+- Ne relance jamais `rtk init` ou `rtk init --global`.
 
-- `codex-config` : modifier cette configuration Codex source.
-- `autoship` : produire une petite feature/fix en autonomie totale quand demande explicitement.
-- `mvp` : demarrer un MVP/POC avec les stacks preferees.
-- `grill-with-docs` : challenger un plan/design avec glossaire `CONTEXT.md` et ADR.
-- `nvim-config` : modifier la configuration Neovim personnelle.
-- `openclaw` : travailler sur Nestor/openclaw et son deploiement.
-- `stack-python` : conventions Python, uv, ruff, mypy, pytest.
-- `stack-ts` : conventions TypeScript/JavaScript, Bun uniquement.
-- `stack-rust` : conventions Rust, cargo, rustfmt, clippy.
-- `api-design` : conception API REST/GraphQL, schemas, versioning, erreurs.
-- `deployment` : CI/CD GitHub Actions, Docker Compose, serveurs Debian/Ubuntu.
+## Contexte
 
-Ne pas ajouter de plugin ou MCP sans demande explicite. Les integrations Claude
-Linear/Notion ne sont pas supposees disponibles dans Codex par defaut.
+- `/clear` entre deux taches sans lien.
+- `/compact Keep: <ce qui compte>` quand tu sens des oublis.
+- Gros perimetre a explorer : sous-agent Explore, puis resume dans le contexte principal.
+- Ne mentionne pas un gros fichier sans raison; donne le chemin et ce que tu cherches.
+- Memoire cross-session : memoire native Codex sous `~/.codex/memories`.
 
-## Auto-Amelioration
+## Auto-amelioration
 
-Quand un pattern se degage du travail, cristallise-le dans la configuration :
+Quand un pattern se degage du travail, cristallise-le dans les skills, la memoire native ou `AGENTS.md`.
 
-- Declencheur : procedure repetee 2-3 fois, correction recurrente de Cyril, ou
-  piege evite de justesse.
-- Quoi : proposer un skill neuf, l'evolution d'un skill existant, ou une ligne
-  d'instruction globale si c'est vraiment transversal.
-- Quand : aux frontieres de tache/session, jamais au milieu d'une implementation.
-- Comment : proposer un diff ou appliquer l'edition si la demande porte deja sur
-  la config; pas de commit auto.
-- Garde-fous : pas d'over-skilling; edition chirurgicale; mini-eval pour un skill
-  sensible avant de s'y fier.
+- Declencheur : procedure repetee 2-3 fois, correction recurrente ou piege evite de justesse.
+- Quoi : skill neuf, evolution d'un skill, entree memoire ou instruction globale selon la portee.
+- Quand : aux frontieres de tache ou de session, jamais au milieu d'une implementation.
+- Comment : propose un diff; je le revois avant ecriture. Jamais de commit automatique.
+- Garde-fous : pas d'over-skilling, edition chirurgicale et mini-eval pour un skill sensible.
 
-## Stack De Reference
+Le hook Stop `scripts/reflect-nudge.sh` le rappelle une fois par session si du travail a eu lieu.
 
-Cette stack est une preference, pas un dogme. Adapter aux contraintes du projet.
+---
 
-- API : FastAPI Python 3.12, ou routes API Next.js si l'app Next le justifie.
-- UI simple MVP/POC : FastAPI + Svelte + Vite, Bun cote frontend.
-- Full JS si impose : React + Express + Bun, Prisma, Biome.
-- DB relationnelle : PostgreSQL.
-- ORM : SQLAlchemy async cote Python, Prisma cote TypeScript.
-- Auth : JWT + refresh tokens, ou NextAuth si l'app Next.js le justifie.
-- Infra : Docker Compose en dev, deploiement conteneurise en prod.
-
-## Communication
-
-- Reponses concises, factuelles, actionnables.
-- Mentionner les fichiers modifies et les verifications faites.
-- Pour un code review, commencer par bugs, risques et regressions avec references
-  fichier/ligne.
-- Si une verification n'a pas pu etre lancee, le dire clairement.
+Ces regles fonctionnent si tu poses les questions avant de coder, si les diffs restent scopes, si tu verifies avant de dire fait, et si tu ne lances jamais `superpowers:subagent-driven-development` sans avoir chiffre le cout.
