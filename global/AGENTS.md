@@ -23,15 +23,20 @@ Garde-fou : avant `superpowers:subagent-driven-development`, estime le cout en t
 
 ## Delegation
 
-Le modele principal reste l'orchestrateur : architecture, arbitrages, debug difficile et synthese. A partir de M, delegue quand il y a du volume ou du parallelisme et que le resultat est bon marche a verifier.
+Contrairement a Claude Code, un sous-agent Codex coute plein tarif : `spawn_agent`
+n'a pas de selecteur de modele ni d'effort, chaque sous-agent tourne donc sur le
+modele principal et repaye le contexte de base (~21k tokens) a chaque spawn.
+Deleguer ne fait pas d'economie ici — c'est un outil d'isolation, pas de layering.
 
-- Deterministe : script, hook ou commande, sans sous-agent.
-- Mecanique a volume : sous-agent d'exploration.
-- Implementation bien specifiee : sous-agent implementer avec spec et tests.
-- Sous-probleme complexe : sous-agent reviewer ou generaliste.
-- XS/S restent inline.
-
-Si la surface Codex ne permet pas de choisir un modele par sous-agent, conserve ce decoupage par role sans inventer de selecteur de modele.
+- Inline par defaut, volume mecanique compris.
+- `spawn_agent` uniquement pour : isoler une grosse exploration dont seul le
+  resume doit revenir dans le contexte principal, ou paralleliser des taches
+  independantes quand le wallclock compte.
+- L'effort `ultra` delegue deja automatiquement : ne double pas sa delegation
+  avec des `spawn_agent` manuels.
+- Le layering par modele passe par les profils (`codex --profile luna` pour les
+  taches mecaniques a volume), pas par les sous-agents.
+- Deterministe : script, hook ou commande, sans modele du tout.
 
 ## Pendant que tu codes
 
@@ -74,7 +79,7 @@ La preference est forte, mais si elle echoue, dis-le et utilise le fallback.
 
 ## RTK
 
-- Le hook `rtk hook claude` reecrit automatiquement les commandes supportees quand `rtk` est installe.
+- Le hook PreToolUse (`scripts/rtk-codex-hook.sh`) reecrit automatiquement les commandes supportees quand `rtk` est installe.
 - Utilise directement `rtk read`, `rtk err`, `rtk log`, `rtk json` ou `rtk summary` quand leur sortie filtree est utile.
 - Ne relance jamais `rtk init` ou `rtk init --global`.
 

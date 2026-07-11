@@ -33,6 +33,23 @@ jamais directement dans `~/.codex`.
 6. Si un skill est ajoute/supprime/renomme, tenir `global/AGENTS.md` et `README.md`
    synchronises.
 
+## Hooks — pièges et débogage
+
+- Côté hooks, le tool shell s'appelle `Bash` (matcher `^Bash$`), payload stdin
+  compatible Claude (`{tool_input: {command}}`). Mais la REPONSE diffère :
+  Codex n'applique `updatedInput` que si `permissionDecision: "allow"` est
+  présent — le schéma Claude seul donne `hook: PreToolUse Failed` et la
+  commande originale part telle quelle (cf. `scripts/rtk-codex-hook.sh`).
+- `hook: … Failed` ne dit pas pourquoi. Trois causes à discriminer : sortie
+  au mauvais schéma, trust périmé (toute modif de la définition dans
+  `hooks.json` invalide le hash → re-trust via `/hooks`), ou hook qui pend.
+- Débogage sans brûler le quota : CODEX_HOME jetable + hook de capture, puis
+  `codex exec --skip-git-repo-check --dangerously-bypass-hook-trust \
+   -c model=gpt-5.6-luna -c model_reasoning_effort=low '...'` (~4k tokens).
+  Le hook de capture (`cat` du stdin vers un fichier) donne payload et
+  tool_name exacts ; le rollout dans `$CODEX_HOME/sessions/` prouve si la
+  réécriture a été appliquée.
+
 ## Conventions
 
 - Instructions globales en francais, concises et actionnables.

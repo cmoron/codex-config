@@ -96,7 +96,14 @@ en conservant la table dynamique `[hooks.state]`.
 
 - `protect-env.sh` bloque les patchs vers `.env` et `.env.*`.
 - `format-on-save.sh` lance le formatter deja installe pour les fichiers modifies.
+- `rtk-codex-hook.sh` reecrit les commandes shell via RTK : Codex exige
+  `permissionDecision: "allow"` en plus du schema Claude emis par `rtk hook claude`.
+  Ne pas remplacer par `rtk init -g --codex` : ce built-in est le mode
+  instructions (~70-80 % de fiabilite, mesure a 2/82 ici), pas un hook —
+  `rtk hook codex` n'existe pas upstream.
 - RTK et Atuin sont utilises quand leurs binaires sont disponibles.
+- Apres toute modification de `hooks.json`, re-truster les hooks une fois via
+  `/hooks` dans le TUI (le hash de confiance porte sur la definition du hook).
 - `reflect-nudge.sh` renvoie toujours du JSON valide pour le contrat `Stop` Codex.
 - La notification sonore utilise `notify`, pas un hook `Stop`.
 

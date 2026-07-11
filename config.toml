@@ -1,5 +1,5 @@
-model = "gpt-5.6-sol"
-model_reasoning_effort = "xhigh"
+model = "gpt-5.6-terra"
+model_reasoning_effort = "ultra"
 personality = "pragmatic"
 approval_policy = "never"
 sandbox_mode = "danger-full-access"
@@ -12,7 +12,7 @@ status_line_use_colors = true
 
 [desktop]
 conversationDetailMode = "STEPS_COMMANDS"
-ambient-suggestions-enabled = true
+ambient-suggestions-enabled = false
 followUpQueueMode = "queue"
 dock-icon-preference = "app-default"
 appearanceLightCodeThemeId = "gruvbox"
@@ -34,6 +34,11 @@ surface = "#fbf1c7"
 diffAdded = "#3c3836"
 diffRemoved = "#cc241d"
 skill = "#b16286"
+
+# Volume / taches mecaniques : `codex --profile luna` (ou /profile dans le TUI).
+[profiles.luna]
+model = "gpt-5.6-luna"
+model_reasoning_effort = "max"
 
 [features]
 memories = true

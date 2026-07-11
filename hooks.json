@@ -15,7 +15,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "command -v rtk >/dev/null && rtk hook claude || true"
+            "command": "$HOME/.codex/scripts/rtk-codex-hook.sh",
+            "timeout": 10
           }
         ]
       }
