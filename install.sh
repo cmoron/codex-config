@@ -130,6 +130,7 @@ deploy_local() {
   copy_file "$CONFIG_DIR/rules/default.rules" "$CODEX_DIR/rules/default.rules"
   link_dir "$CONFIG_DIR/scripts" "$CODEX_DIR/scripts"
   link_dir "$CONFIG_DIR/assets" "$CODEX_DIR/assets"
+  link_dir "$CONFIG_DIR/agents" "$CODEX_DIR/agents"
 
   prune_managed_links "$CODEX_DIR/skills"
   prune_managed_links "$AGENTS_SKILLS_DIR"
@@ -259,6 +260,7 @@ deploy_windows_copy() {
   copy_managed_file "$CONFIG_DIR/rules/default.rules" "$target_root" "rules/default.rules"
   copy_managed_dir "$CONFIG_DIR/scripts" "$target_root" "scripts"
   copy_managed_dir "$CONFIG_DIR/assets" "$target_root" "assets"
+  copy_managed_dir "$CONFIG_DIR/agents" "$target_root" "agents"
 
   for skill_dir in "$CONFIG_DIR/skills/"*/; do
     [ -d "$skill_dir" ] || continue

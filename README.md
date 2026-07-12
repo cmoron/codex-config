@@ -46,6 +46,7 @@ cd ~/src/codex-config
 | `skills/*` | `~/.agents/skills/*` (`~/.codex/skills/*` sous Windows) | Skills personnels Codex |
 | `scripts/` | `~/.codex/scripts/` + Windows si detecte | Implementations des hooks et notification |
 | `assets/` | `~/.codex/assets/` + Windows si detecte | MP3 de fin de travail |
+| `agents/` | `~/.codex/agents/` + Windows si detecte | Custom agents avec modele/effort pinnes |
 
 ## Skills Personnels
 
@@ -72,6 +73,16 @@ a chaque produit.
 declares dans `config.toml`. Les chemins et timestamps de cache ne sont pas versionnes.
 `security-guidance` reste desactive : ses hooks Anthropic utilisent des champs
 `Stop` et `SessionStart` que Codex 0.144.1 rejette.
+
+## Modeles
+
+- Defaut : `gpt-5.6-terra` @ `max` — le sweet spot communautaire. Jamais `ultra` :
+  ce mode spawne des sous-agents paralleles (2-5x tokens, caches isoles) factures
+  en tier Fast quel que soit le tier de la session (bug openai/codex#30407, ouvert,
+  sans workaround).
+- Profils : `luna` (volume mecanique), `sol` @ high (escalade archi/security).
+- `agents/explore.toml` : custom agent d'exploration read-only pinne sur luna,
+  pour que la delegation d'exploration ne paie pas le tarif terra.
 
 ## Statusline
 
@@ -117,6 +128,8 @@ macOS, WSL2 et fallback terminal bell.
 ```text
 .
 ├── AGENTS.md
+├── agents/
+│   └── explore.toml
 ├── global/
 │   └── AGENTS.md
 ├── config.toml

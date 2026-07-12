@@ -23,19 +23,21 @@ Garde-fou : avant `superpowers:subagent-driven-development`, estime le cout en t
 
 ## Delegation
 
-Contrairement a Claude Code, un sous-agent Codex coute plein tarif : `spawn_agent`
-n'a pas de selecteur de modele ni d'effort, chaque sous-agent tourne donc sur le
-modele principal et repaye le contexte de base (~21k tokens) a chaque spawn.
-Deleguer ne fait pas d'economie ici — c'est un outil d'isolation, pas de layering.
+Un `spawn_agent` dynamique herite modele et effort du parent : plein tarif, plus
+le contexte de base (~21k tokens) repaye a chaque spawn. Pire : les sous-agents
+sont factures en tier Fast quel que soit le tier de la session (bug
+openai/codex#30407, sans workaround). Spawner reste un outil d'isolation, a
+utiliser avec parcimonie.
 
 - Inline par defaut, volume mecanique compris.
-- `spawn_agent` uniquement pour : isoler une grosse exploration dont seul le
-  resume doit revenir dans le contexte principal, ou paralleliser des taches
-  independantes quand le wallclock compte.
-- L'effort `ultra` delegue deja automatiquement : ne double pas sa delegation
-  avec des `spawn_agent` manuels.
-- Le layering par modele passe par les profils (`codex --profile luna` pour les
-  taches mecaniques a volume), pas par les sous-agents.
+- Exploration a deleguer : agent nomme `explore` (custom agent pinne sur
+  luna@medium, read-only) — seul le resume revient dans le contexte principal.
+- Le layering par modele passe par les custom agents (`~/.codex/agents/*.toml`,
+  champs `model` + `model_reasoning_effort`) et les profils : `codex --profile
+  luna` en volume, `codex --profile sol` en escalade archi/security.
+- Jamais d'effort `ultra` : il spawne ses propres sous-agents paralleles
+  (2-5x tokens, caches isoles, factures Fast). `max` fait le meme travail en
+  sequentiel.
 - Deterministe : script, hook ou commande, sans modele du tout.
 
 ## Pendant que tu codes
@@ -70,7 +72,7 @@ Preuve d'execution obligatoire : tests qui passent, app qui demarre, endpoint qu
 | Recherche regex/litterale | `rg` | recherche integree |
 | Recherche structure multi-lignes | `ast-grep` / `sg` | lecture ciblee |
 | Recherche fichiers | `fd` | `rg --files`, puis glob |
-| Explorer un fichier inconnu de plus de 200 lignes | sous-agent Explore | lecture ciblee par sections |
+| Explorer un fichier inconnu de plus de 200 lignes | agent `explore` | lecture ciblee par sections |
 | Web | `mgrep --web --answer` | recherche web ciblee, en prevenant |
 | Documentation de bibliotheque | plugin `context7` | web sur la source officielle |
 | Extraction JSON/YAML | `jq` / `yq` | parseur structure, jamais un dump massif |
@@ -87,7 +89,7 @@ La preference est forte, mais si elle echoue, dis-le et utilise le fallback.
 
 - `/clear` entre deux taches sans lien.
 - `/compact Keep: <ce qui compte>` quand tu sens des oublis.
-- Gros perimetre a explorer : sous-agent Explore, puis resume dans le contexte principal.
+- Gros perimetre a explorer : agent `explore`, puis resume dans le contexte principal.
 - Ne mentionne pas un gros fichier sans raison; donne le chemin et ce que tu cherches.
 - Memoire cross-session : memoire native Codex sous `~/.codex/memories`.
 

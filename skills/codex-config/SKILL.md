@@ -15,6 +15,7 @@ jamais directement dans `~/.codex`.
 ├── AGENTS.md              # Instructions propres a ce repo
 ├── global/AGENTS.md       # Instructions globales deployees dans ~/.codex/AGENTS.md
 ├── config.toml            # Modele, sandbox, TUI, plugins, MCPs
+├── agents/                # Custom agents (modele/effort pinnes par sous-agent)
 ├── rules/default.rules    # Regles persistantes d'approbation
 ├── skills/                # Skills personnels Codex
 ├── scripts/               # Helpers de notification

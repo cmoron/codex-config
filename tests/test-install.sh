@@ -28,6 +28,7 @@ after=$(shasum -a 256 "$ROOT/config.toml" | cut -d' ' -f1)
 [ "$before" = "$after" ]
 grep -q '^\[hooks.state\."test"\]$' "$HOME/.codex/config.toml"
 [ "$(readlink "$HOME/.agents/skills/api-design")" = "$ROOT/skills/api-design/" ]
+[ "$(readlink "$HOME/.codex/agents")" = "$ROOT/agents" ]
 grep -q '^plugin marketplace upgrade ' "$CODEX_TEST_LOG"
 grep -q '^plugin add ' "$CODEX_TEST_LOG"
 
