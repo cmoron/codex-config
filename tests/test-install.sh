@@ -21,6 +21,10 @@ before=$(shasum -a 256 "$ROOT/config.toml" | cut -d' ' -f1)
 cmp -s "$ROOT/config.toml" "$HOME/.codex/config.toml"
 cmp -s "$ROOT/hooks.json" "$HOME/.codex/hooks.json"
 
+grep -q '^multi_agent = false$' "$HOME/.codex/config.toml"
+grep -q '^multi_agent_v2 = false$' "$HOME/.codex/config.toml"
+grep -q '^fast_mode = false$' "$HOME/.codex/config.toml"
+
 printf '\n[hooks.state]\n[hooks.state."test"]\ntrusted_hash = "sha256:test"\n' >>"$HOME/.codex/config.toml"
 "$ROOT/install.sh" >/dev/null
 after=$(shasum -a 256 "$ROOT/config.toml" | cut -d' ' -f1)
