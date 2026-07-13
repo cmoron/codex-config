@@ -1,5 +1,8 @@
-# Jamais `ultra` : il spawne des sous-agents paralleles (2-5x tokens, caches isoles)
-# factures en tier Fast (bug openai/codex#30407, sans workaround). `max` = sequentiel.
+# GPT-5.6 / Multi-Agent V2 reste instable : les sous-agents peuvent heriter du
+# modele/effort du parent et ont deja consomme du tier Fast sans demande explicite.
+# Le mode multi-agent et Fast sont donc bloques au niveau du harness, pas seulement
+# par instructions. Reevaluer quand openai/codex#29940, #30407, #31814 et #32031
+# seront corriges et verifies sur une release Codex.
 model = "gpt-5.6-terra"
 model_reasoning_effort = "max"
 personality = "pragmatic"
@@ -48,6 +51,11 @@ model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 
 [features]
+# Garde-fous runtime : ne pas laisser le modele ou le harness lancer des workers
+# tant que le routing et l'heritage du service tier ne sont pas fiables.
+multi_agent = false
+multi_agent_v2 = false
+fast_mode = false
 memories = true
 
 [memories]
