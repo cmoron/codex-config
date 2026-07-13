@@ -3,8 +3,12 @@
 # Le mode multi-agent et Fast sont donc bloques au niveau du harness, pas seulement
 # par instructions. Reevaluer quand openai/codex#29940, #30407, #31814 et #32031
 # seront corriges et verifies sur une release Codex.
-model = "gpt-5.6-terra"
-model_reasoning_effort = "max"
+#
+# Sol @ medium est le defaut Power recommande pour le travail general et ambigu.
+# Monter a high uniquement pour l'architecture, la securite ou le debug difficile;
+# reserver max aux blocages reels, jamais comme cout fixe de chaque session.
+model = "gpt-5.6-sol"
+model_reasoning_effort = "medium"
 personality = "pragmatic"
 approval_policy = "never"
 sandbox_mode = "danger-full-access"
@@ -40,13 +44,18 @@ diffAdded = "#3c3836"
 diffRemoved = "#cc241d"
 skill = "#b16286"
 
-# Volume / taches mecaniques : `codex --profile luna` (ou /profile dans le TUI).
+# Implementation bornee / travail quotidien moins cher : `codex --profile terra`.
+[profiles.terra]
+model = "gpt-5.6-terra"
+model_reasoning_effort = "medium"
+
+# Volume / taches mecaniques : `codex --profile luna`.
 [profiles.luna]
 model = "gpt-5.6-luna"
-model_reasoning_effort = "max"
+model_reasoning_effort = "medium"
 
-# Escalade (archi, security, debug dur) : `codex --profile sol`.
-[profiles.sol]
+# Escalade (archi, security, debug dur) : `codex --profile sol-high`.
+[profiles.sol-high]
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 
