@@ -21,6 +21,11 @@ before=$(shasum -a 256 "$ROOT/config.toml" | cut -d' ' -f1)
 cmp -s "$ROOT/config.toml" "$HOME/.codex/config.toml"
 cmp -s "$ROOT/hooks.json" "$HOME/.codex/hooks.json"
 
+grep -q '^model = "gpt-5.6-sol"$' "$HOME/.codex/config.toml"
+grep -q '^model_reasoning_effort = "medium"$' "$HOME/.codex/config.toml"
+grep -q '^\[profiles.terra\]$' "$HOME/.codex/config.toml"
+grep -q '^\[profiles.luna\]$' "$HOME/.codex/config.toml"
+grep -q '^\[profiles.sol-high\]$' "$HOME/.codex/config.toml"
 grep -q '^multi_agent = false$' "$HOME/.codex/config.toml"
 grep -q '^multi_agent_v2 = false$' "$HOME/.codex/config.toml"
 grep -q '^fast_mode = false$' "$HOME/.codex/config.toml"
