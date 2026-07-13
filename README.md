@@ -46,7 +46,7 @@ cd ~/src/codex-config
 | `skills/*` | `~/.agents/skills/*` (`~/.codex/skills/*` sous Windows) | Skills personnels Codex |
 | `scripts/` | `~/.codex/scripts/` + Windows si detecte | Implementations des hooks et notification |
 | `assets/` | `~/.codex/assets/` + Windows si detecte | MP3 de fin de travail |
-| `agents/` | `~/.codex/agents/` + Windows si detecte | Custom agents avec modele/effort pinnes |
+| `agents/` | `~/.codex/agents/` + Windows si detecte | Custom agents dormants tant que le multi-agent est desactive |
 
 ## Skills Personnels
 
@@ -76,13 +76,19 @@ declares dans `config.toml`. Les chemins et timestamps de cache ne sont pas vers
 
 ## Modeles
 
-- Defaut : `gpt-5.6-terra` @ `max` — le sweet spot communautaire. Jamais `ultra` :
-  ce mode spawne des sous-agents paralleles (2-5x tokens, caches isoles) factures
-  en tier Fast quel que soit le tier de la session (bug openai/codex#30407, ouvert,
-  sans workaround).
-- Profils : `luna` (volume mecanique), `sol` @ high (escalade archi/security).
-- `agents/explore.toml` : custom agent d'exploration read-only pinne sur luna,
-  pour que la delegation d'exploration ne paie pas le tarif terra.
+- Defaut : `gpt-5.6-sol` @ `medium`. C'est le point de depart Power recommande pour
+  le travail general, ambigu et les arbitrages. L'objectif est de payer un meilleur
+  premier passage plutot que plusieurs reprises d'un modele moins fort.
+- Profil `terra` @ `medium` : implementation bornee, spec claire, travail quotidien
+  ou le cout prime davantage que l'ambiguite.
+- Profil `luna` @ `medium` : volume mecanique, recherche, transformations simples.
+- Profil `sol-high` : architecture, securite, debug difficile.
+- `max` reste une escalade ponctuelle apres echec; `ultra` est interdit.
+- `multi_agent`, `multi_agent_v2` et `fast_mode` sont explicitement desactives tant
+  que les regressions openai/codex#29940, #30407, #31814 et #32031 ne sont pas
+  corrigees et verifiees sur une release.
+- Les custom agents sous `agents/` restent versionnes mais dormants pour pouvoir
+  retester le layering une fois le harness stabilise.
 
 ## Statusline
 
