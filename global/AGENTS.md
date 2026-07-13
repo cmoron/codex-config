@@ -21,6 +21,15 @@ Sur-processer une petite tache gaspille du temps et des tokens.
 
 `superpowers:subagent-driven-development` est desactive tant que le multi-agent Codex n'est pas fiable. Pour une tache L+, produire un plan explicite, executer inline par lots et demander une validation humaine aux frontieres importantes.
 
+## Modeles et effort
+
+- Defaut : `gpt-5.6-sol` @ `medium` pour l'orchestration generale, les demandes ambigues et les arbitrages.
+- Profil `terra` @ `medium` pour une implementation bornee, clairement specifiee et moins couteuse.
+- Profil `luna` @ `medium` pour le volume mecanique, la recherche et les transformations simples.
+- Profil `sol-high` pour l'architecture, la securite et le debug difficile.
+- `max` est une escalade ponctuelle apres echec ou pour un probleme exceptionnellement resistant, jamais un defaut permanent.
+- `ultra` est interdit tant qu'il implique du fan-out multi-agent non controle.
+
 ## Delegation
 
 Le multi-agent Codex est desactive au niveau de `config.toml` (`multi_agent = false`, `multi_agent_v2 = false`) tant que les regressions GPT-5.6 sur le routing, l'heritage modele/effort et le service tier ne sont pas corrigees et verifiees.
@@ -28,7 +37,7 @@ Le multi-agent Codex est desactive au niveau de `config.toml` (`multi_agent = fa
 - Ne jamais appeler `spawn_agent`, `send_input`, `wait_agent` ou un workflow qui en depend.
 - Ne jamais utiliser l'effort `ultra`, qui implique du fan-out et des caches isoles.
 - Tout le travail est inline et sequentiel dans la session courante.
-- Le layering par modele est manuel entre sessions : profil `luna` pour le volume mecanique, defaut `terra`, profil `sol` pour l'architecture, la securite et le debug difficile.
+- Le layering par modele est manuel entre sessions : defaut `sol`, profil `terra` pour l'implementation bornee, profil `luna` pour le volume mecanique et profil `sol-high` pour les cas difficiles.
 - Pour isoler une grosse exploration, utiliser une nouvelle session/profil puis rapporter son resume dans la session principale.
 - Deterministe : script, hook ou commande, sans modele du tout.
 
