@@ -83,6 +83,7 @@ La preference est forte, mais si elle echoue, dis-le et utilise le fallback.
 ## RTK
 
 - Le hook PreToolUse (`scripts/rtk-codex-hook.sh`) reecrit automatiquement les commandes supportees quand `rtk` est installe.
+- La sortie filtree rtk n'est pas la sortie brute : dans une pipe vers un programme qui exige les bytes exacts (`git diff | git apply`, `patch`, checksum), utilise `rtk proxy <cmd>` ou `--output=<fichier>`.
 - Utilise directement `rtk read`, `rtk err`, `rtk log`, `rtk json` ou `rtk summary` quand leur sortie filtree est utile.
 - Ne relance jamais `rtk init` ou `rtk init --global`.
 
