@@ -66,6 +66,9 @@ multi_agent = false
 multi_agent_v2 = false
 fast_mode = false
 memories = true
+# Superpowers vient du catalogue distant OpenAI. Ne pas l'installer localement :
+# les deux sources se masquent et le snapshot OpenAI local est plus ancien.
+remote_plugin = true
 
 [memories]
 generate_memories = true
@@ -115,9 +118,6 @@ enabled = true
 enabled = false
 
 [plugins."skill-creator@claude-plugins-official"]
-enabled = true
-
-[plugins."superpowers@claude-plugins-official"]
 enabled = true
 
 [plugins."typescript-lsp@claude-plugins-official"]

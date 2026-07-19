@@ -174,7 +174,6 @@ bootstrap_plugins() {
       pyright-lsp@claude-plugins-official \
       rust-analyzer-lsp@claude-plugins-official \
       skill-creator@claude-plugins-official \
-      superpowers@claude-plugins-official \
       typescript-lsp@claude-plugins-official \
       ponytail@ponytail; do
       codex plugin add "$plugin" >/dev/null
