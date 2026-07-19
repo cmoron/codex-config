@@ -1,64 +1,86 @@
 ---
 name: mvp
-description: Creer un MVP ou POC rapidement avec les stacks preferees de Cyril. Eviter les choix par defaut inadaptes comme Next.js sans besoin SSR, npm/yarn/pnpm/node, SQLite en prod ou pip install direct.
+description: Pour créer un MVP ou POC rapidement avec les stacks préférées. Évite les choix par défaut inadaptés (pas de Next.js, pas de npm/yarn/node).
 ---
 
 # MVP / POC — Stacks et conventions
 
-Utiliser ce skill quand on demarre un nouveau projet de zero : MVP, POC,
-prototype ou side project.
+Utiliser ce skill dès qu'on démarre un nouveau projet de zéro : MVP, POC, prototype, side project.
 
-## Choix de stack
+## Choix de stack selon le besoin
 
-### API seule
+### API seule / Backend pur
+**FastAPI + Python**
+```
+monprojet/
+├── pyproject.toml         # uv, dépendances
+├── src/monprojet/
+│   ├── main.py            # FastAPI app
+│   ├── models.py          # SQLAlchemy models
+│   ├── schemas.py         # Pydantic schemas
+│   ├── database.py        # Session Postgres
+│   └── routers/
+├── tests/
+├── Dockerfile
+├── docker-compose.yml
+└── .github/workflows/ci.yml
+```
+- ORM : SQLAlchemy async + Alembic migrations
+- Auth : JWT (python-jose) ou pas d'auth si POC
+- **Jamais** de `pip install` — toujours `uv add`
 
-FastAPI + Python 3.12 :
+### Web app complète (UI non critique)
+**FastAPI + Svelte + Vite**
+```
+monprojet/
+├── backend/               # FastAPI (cf. ci-dessus)
+├── frontend/              # Svelte + Vite, géré par Bun
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── src/
+├── docker-compose.yml     # backend + frontend + postgres
+└── .github/workflows/
+```
+- Bundler/runtime JS : **Bun uniquement** (`bun install`, `bun run dev`)
+- Svelte (pas SvelteKit sauf si routing SSR vraiment nécessaire)
+- Vite pour le dev server
+- Pas de Next.js
 
-- Gestion deps/envs : `uv`.
-- ORM : SQLAlchemy async.
-- Migrations : Alembic.
-- Tests : pytest.
-- Lint/format/types : `ruff`, `mypy`.
-- DB : PostgreSQL via `docker-compose.yml`.
-- Structure attendue : `src/<app>/main.py`, `models.py`, `schemas.py`,
-  `database.py`, `routers/`, `tests/`.
-- Auth : JWT si utile au POC, sinon pas d'auth artificielle.
-
-### Web app complete a UI non critique
-
-FastAPI + Svelte + Vite :
-
-- `backend/` en FastAPI.
-- `frontend/` en Svelte + Vite.
-- Bun uniquement cote frontend : `bun install`, `bun run dev`, `bun test`.
-- Pas de SvelteKit sauf besoin explicite de routing/SSR produit.
-- `docker-compose.yml` avec backend, frontend et Postgres si DB requise.
-
-### Full JS si impose
-
-React + Express + Bun :
-
-- Monorepo Bun workspaces.
-- Prisma pour l'ORM.
-- Biome pour lint + format.
-- Pas de `npm`, `pnpm`, `yarn` ou `node` sauf contrainte projet explicite.
+### Monorepo full-JS (si équipe JS ou client React imposé)
+**React + Express + Bun**
+```
+monprojet/
+├── apps/
+│   ├── api/               # Express (TypeScript, Bun)
+│   └── web/               # React + Vite (Bun)
+├── packages/
+│   └── shared/            # Types partagés
+├── package.json           # workspace Bun
+├── docker-compose.yml
+└── .github/workflows/
+```
+- ORM : Prisma (TypeScript-first, fonctionne avec Express)
+- Runtime : Bun partout — **pas de npm, pnpm, yarn, node**
+- Biome pour lint + format (remplace ESLint + Prettier)
 
 ### CLI seule
+**Python + Typer**
+```
+monprojet/
+├── pyproject.toml
+├── src/monprojet/
+│   ├── cli.py             # Typer app
+│   └── core.py
+├── tests/
+└── Dockerfile
+```
+- Sortie : JSON sur stdout, erreurs sur stderr, exit 0/1
+- Toujours : `--help` exploitable par un agent
 
-Python + Typer :
+## Base de données
 
-- `typer` pour l'interface CLI.
-- `rich` pour les sorties humaines.
-- JSON sur stdout pour les sorties machine.
-- Erreurs sur stderr et exit codes propres.
-- `--help` exploitable par un agent.
-
-## Base De Donnees
-
-- PostgreSQL par defaut; SQLite seulement si contrainte explicite.
-- Migrations : Alembic cote FastAPI, Prisma migrate cote TypeScript.
-- Volume Docker nomme et persistant.
-
+- **Toujours Postgres** (pas de SQLite sauf contrainte explicite)
+- Lancer via docker-compose en dev :
 ```yaml
 postgres:
   image: postgres:16-alpine
@@ -71,23 +93,50 @@ postgres:
   volumes:
     - postgres_data:/var/lib/postgresql/data
 ```
+- Migrations : Alembic (FastAPI) ou Prisma migrate (Express)
 
-## CI/CD Minimal
+## Docker / Docker Compose
 
-GitHub Actions des le depart :
+Chaque projet doit avoir un `docker-compose.yml` fonctionnel dès le départ :
+- `app` (ou `backend` + `frontend`)
+- `postgres`
+- Variables d'env dans `.env` (jamais hardcodées)
+- Multi-stage Dockerfile pour les images de prod
 
-- checkout.
-- setup Python ou Bun selon la stack.
-- lint.
-- tests.
-- build si frontend ou image Docker.
+## CI/CD — GitHub Actions minimal
 
-## Regles de base
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup (Python ou Bun selon stack)
+      - name: Lint
+      - name: Tests
+```
 
-- Toujours fournir un `docker-compose.yml` fonctionnel des le depart quand une DB est requise.
-- Eviter SQLite en prod.
-- Ne jamais utiliser `pip install` directement : `uv add` ou `uv tool`.
-- Tests avant ou avec le code.
-- CI minimale GitHub Actions : lint + tests.
-- `.env` jamais committe, variables documentees dans `.env.example` si utile.
-- `.gitignore` adapte des le depart : `.env`, `__pycache__`, `node_modules`, artefacts de build.
+## Versioning
+
+- Git + GitHub, trunk-based (branche `main` unique pour les POC)
+- Conventional commits : `feat:`, `fix:`, `chore:`, `docs:`
+- `.gitignore` adapté dès le départ (`.env`, `__pycache__`, `node_modules`, etc.)
+
+## Lint par langage
+
+| Langage | Lint | Format |
+|---------|------|--------|
+| Python | `ruff check` | `ruff format` |
+| TypeScript/JS | Biome (`biome check`) | Biome |
+| Svelte | Biome + svelte-check | Biome |
+
+## Ce qu'on n'utilise pas
+
+- Next.js (trop opinionated, SSR souvent inutile pour un POC)
+- npm, yarn, pnpm (Bun uniquement côté JS)
+- SQLite en prod
+- `unittest` Python (pytest uniquement)
+- `pip install` directement (uv uniquement)

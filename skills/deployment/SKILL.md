@@ -1,41 +1,44 @@
 ---
 name: deployment
-description: "Conventions de deploiement de Cyril : CI/CD GitHub Actions, gh CLI, Docker Compose, serveurs Debian/Ubuntu, Postgres. Utiliser pour deployer, ecrire un workflow CI/CD, ou diagnostiquer un deploiement."
+description: Conventions de déploiement — CI/CD GitHub Actions, gh CLI, Docker/docker-compose, serveurs Debian/Ubuntu, Postgres. Charger pour déployer une application, écrire un workflow CI/CD, ou diagnostiquer un déploiement.
 ---
 
 # Deployment
 
-CI/CD par defaut : GitHub Actions. Cibles : VPS, serveurs dedies ou NAS maison,
-tous Debian/Ubuntu. Packaging : Docker + Docker Compose. Base de donnees :
-PostgreSQL.
+CI/CD par défaut : **GitHub Actions**. Cibles : VPS / serveurs dédiés / NAS maison —
+tous Debian/Ubuntu. Packaging : **Docker + docker-compose** (conteneurisation légère).
+Base de données : PostgreSQL.
 
 ## Outils
 
-- `gh` pour piloter GitHub Actions depuis le terminal.
-- `docker compose` v2, sans tiret.
-- Ansible pour la configuration des serveurs quand le projet en dispose.
+- `gh` (GitHub CLI) — installé sur tous les postes de dev. Piloter les workflows
+  depuis le terminal :
 
 ```bash
-gh workflow run <workflow>
-gh run list --workflow=<wf>
-gh run watch
-gh run view <id> --log-failed
+gh workflow run <workflow>       # déclencher manuellement
+gh run list --workflow=<wf>      # historique des runs
+gh run watch                     # suivre le run en cours
+gh run view <id> --log-failed    # logs des jobs échoués
 ```
 
-## Priorites
+- `docker compose` (v2, sans tiret) pour le packaging et l'exécution.
+- Ansible pour la configuration des serveurs (cf. skill `openclaw` / Nestor).
 
-1. Reproductibilite : le deploiement part de l'etat du repo.
-2. Migrations DB versionnees, jouees avant ou avec le deploiement du code.
-3. Secrets hors du repo : GitHub Actions secrets en CI, `.env` non versionne cote serveur.
-4. Healthcheck apres deploiement.
+## Priorités (dans l'ordre)
 
-## Regles
+1. Reproductibilité — le déploiement part de l'état du repo, jamais d'une modif manuelle sur le serveur
+2. Migrations DB versionnées et réversibles, jouées avant ou avec le déploiement du code
+3. Secrets hors du repo — GitHub Actions secrets en CI, fichier `.env` non versionné côté serveur
+4. Healthcheck après déploiement — un déploiement n'est validé que si le service répond
 
-- Pipeline GitHub Actions : lint + tests + build avant tout deploiement.
-- Image Docker taguee par SHA de commit; jamais `latest` en production.
-- `docker-compose.yml` versionne; override prod separe si necessaire.
-- Rollback = redeployer le tag precedent; conserver les N dernieres images.
-- Postgres : volume nomme persistant, jamais dans le conteneur applicatif.
-- Pas de livraison par `ssh` + commande manuelle hors incident explicite.
+## Règles absolues
 
-Verifier le run et le healthcheck avant de declarer un deploiement reussi.
+- Pipeline GitHub Actions : lint + tests + build doivent passer avant tout déploiement
+- Image Docker taguée par SHA de commit — jamais `latest` en production
+- `docker-compose.yml` versionné ; un override (`docker-compose.prod.yml`) pour la prod
+- Rollback = redéployer le tag précédent — conserver les N dernières images
+- Postgres : volume nommé persistant, jamais dans le conteneur applicatif
+- Pas de `ssh` + commande manuelle pour livrer — tout passe par le pipeline
+
+Toujours vérifier le run avec `gh run watch` et confirmer le healthcheck avant de
+déclarer un déploiement réussi.

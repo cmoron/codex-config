@@ -231,6 +231,23 @@ copy_managed_dir() {
   echo "$relative_target" >>"$marker.tmp"
 }
 
+seed_windows_config_file() {
+  local source="$1"
+  local target_root="$2"
+  local relative_target="$3"
+  local target="$target_root/$relative_target"
+
+  mkdir -p "$(dirname "$target")"
+
+  if [ -e "$target" ]; then
+    echo "  keep $target"
+    return 0
+  fi
+
+  cp -p "$source" "$target"
+  echo "  seed $target"
+}
+
 prune_windows_managed_paths() {
   local target_root="$1"
   local marker="$target_root/.codex-config-managed"
@@ -240,6 +257,10 @@ prune_windows_managed_paths() {
   while IFS= read -r relative_target; do
     [ -n "$relative_target" ] || continue
     if ! grep -Fxq "$relative_target" "$marker.tmp"; then
+      if [ "$relative_target" = "config.toml" ] && [ -e "$target_root/$relative_target" ]; then
+        echo "  keep $target_root/$relative_target"
+        continue
+      fi
       rm -rf "$target_root/$relative_target"
       echo "  prune $target_root/$relative_target"
     fi
@@ -255,7 +276,7 @@ deploy_windows_copy() {
   : >"$marker.tmp"
 
   copy_managed_file "$CONFIG_DIR/global/AGENTS.md" "$target_root" "AGENTS.md"
-  copy_managed_file "$CONFIG_DIR/config.toml" "$target_root" "config.toml"
+  seed_windows_config_file "$CONFIG_DIR/config.toml" "$target_root" "config.toml"
   copy_managed_file "$CONFIG_DIR/hooks.json" "$target_root" "hooks.json"
   copy_managed_file "$CONFIG_DIR/rules/default.rules" "$target_root" "rules/default.rules"
   copy_managed_dir "$CONFIG_DIR/scripts" "$target_root" "scripts"

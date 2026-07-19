@@ -18,6 +18,9 @@ preserve lors des reinstallations.
 Sous WSL2, `install.sh` déploie aussi la configuration pour l'application Codex
 Windows quand `/mnt/c/Users/$USER/.codex` existe. Cette cible reçoit des copies
 réelles, pas des symlinks WSL, afin d'être lisible par l'application native.
+Le `config.toml` Windows est app-owned : il est créé seulement s'il manque, puis
+préservé pour laisser l'application native gérer ses sections runtime, desktop,
+plugins Chrome et Computer Use.
 
 Pour forcer un autre chemin Windows :
 
@@ -40,7 +43,7 @@ cd ~/src/codex-config
 | --- | --- | --- |
 | `global/AGENTS.md` | `~/.codex/AGENTS.md` + Windows si detecte | Instructions globales Codex (copie) |
 | `AGENTS.md` | repo root | Instructions specifiques a ce repo |
-| `config.toml` | `~/.codex/config.toml` + Windows si detecte | Reglages communs, TUI, Desktop et plugins (copie) |
+| `config.toml` | `~/.codex/config.toml` (copie); Windows seede seulement si absent | Reglages communs, TUI, Desktop et plugins |
 | `hooks.json` | `~/.codex/hooks.json` + Windows si detecte | Protection des fichiers, formatage, RTK et rappel de fin (copie) |
 | `rules/default.rules` | `~/.codex/rules/default.rules` + Windows si detecte | Interdictions de commandes destructrices (copie) |
 | `skills/*` | `~/.agents/skills/*` (`~/.codex/skills/*` sous Windows) | Skills personnels Codex |
@@ -58,6 +61,8 @@ cd ~/src/codex-config
 | `grill-with-docs` | Challenger un plan/design avec glossaire `CONTEXT.md` et ADR |
 | `nvim-config` | Modifier la configuration Neovim personnelle |
 | `openclaw` | Travailler sur Nestor/openclaw et son déploiement |
+| `lotusim-developer` | Build/run/contribution à LOTUSim |
+| `opensource-contributor` | Process avant PR/issue sur repo open source tiers |
 | `stack-python` | Conventions Python : uv, ruff, mypy, pytest |
 | `stack-ts` | Conventions TypeScript/JavaScript : Bun uniquement |
 | `stack-rust` | Conventions Rust : cargo, rustfmt, clippy |
@@ -94,7 +99,15 @@ declares dans `config.toml`. Les chemins et timestamps de cache ne sont pas vers
 
 Codex CLI configure sa statusbar native via `tui.status_line` dans
 `config.toml`. La configuration active affiche le modèle avec niveau de
-raisonnement, le répertoire courant, la branche git et le contexte restant.
+raisonnement, les limites d'utilisation, le contexte, le répertoire courant, la
+branche git et la progression de la tâche.
+
+## Fenêtre de contexte
+
+Le cache modèle local Codex (`~/.codex/models_cache.json`, client 0.144.5) expose
+actuellement `gpt-5.5` et `gpt-5.6-sol` avec une fenêtre maximale de 272k tokens.
+La fenêtre utilisable affichée autour de 258k correspond à cette limite avec la
+marge effective de Codex. Ce n'est pas configurable à 1M depuis `config.toml`.
 
 ## App et TUI
 
@@ -148,9 +161,11 @@ macOS, WSL2 et fallback terminal bell.
 │   ├── codex-config/
 │   ├── deployment/
 │   ├── grill-with-docs/
+│   ├── lotusim-developer/
 │   ├── mvp/
 │   ├── nvim-config/
 │   ├── openclaw/
+│   ├── opensource-contributor/
 │   ├── stack-python/
 │   ├── stack-rust/
 │   └── stack-ts/

@@ -1,14 +1,12 @@
 ---
 name: stack-ts
-description: "Conventions TypeScript/JavaScript de Cyril : Bun uniquement, types stricts, gestion d'erreurs explicite. Utiliser a l'edition de .ts/.tsx, package.json, ou pour une question TypeScript."
+description: Conventions TypeScript/JavaScript — bun uniquement, jamais npm/node. Charger à l'édition de .ts/.tsx, package.json, ou pour une question TypeScript.
 ---
 
 # Stack TypeScript
 
-`bun` uniquement : runtime, package manager, bundler, test runner.
-
-Ne pas utiliser `npm`, `pnpm`, `yarn` ou `node` sauf contrainte explicite du
-projet.
+`bun` uniquement — runtime, package manager, bundler, test runner.
+**Jamais npm / pnpm / yarn / node.**
 
 ## Commandes
 
@@ -20,15 +18,14 @@ bun test
 bun build
 ```
 
-## Priorites
+## Priorités (dans l'ordre)
 
-1. Types stricts : `strict: true` dans `tsconfig.json`, pas d'`any` implicite.
-2. Gestion d'erreurs explicite; pas de catch silencieux.
-3. Respect du formatter/linter du projet, Biome par defaut pour un nouveau POC.
+1. Types stricts — `strict: true` dans `tsconfig.json`, pas d'`any` implicite
+2. Gestion d'erreurs explicite — pas de catch silencieux
+3. `prettier` pour le format (auto via hooks, ne pas relancer à la main)
 
-## Regles
+## Règles absolues
 
-- Toute commande JS passe par `bun`.
-- Pas de `node_modules` gere par un autre outil que Bun.
-- Un module = une responsabilite.
-- Types partages dans un package dedie si le projet devient multi-app.
+- Toute commande passe par `bun` — installation, scripts, tests, build
+- Pas de `node_modules` géré par un autre outil que `bun`
+- Un module = une responsabilité

@@ -61,4 +61,6 @@ jamais directement dans `~/.codex`.
   la source; ne pas contourner ce deploiement declaratif.
 - Sous WSL2, `install.sh` copie aussi les fichiers geres vers
   `/mnt/c/Users/$USER/.codex` si ce dossier existe. Ne pas symlinker cette cible :
-  l'application Windows doit lire des fichiers reels.
+  l'application Windows doit lire des fichiers reels. Son `config.toml` est
+  preserve s'il existe, car l'application native y ajoute des sections runtime,
+  desktop, plugins Chrome et Computer Use.
