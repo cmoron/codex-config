@@ -22,7 +22,7 @@ cmp -s "$ROOT/config.toml" "$HOME/.codex/config.toml"
 cmp -s "$ROOT/hooks.json" "$HOME/.codex/hooks.json"
 
 grep -q '^model = "gpt-5.6-sol"$' "$HOME/.codex/config.toml"
-grep -q '^model_reasoning_effort = "medium"$' "$HOME/.codex/config.toml"
+grep -q '^model_reasoning_effort = "xhigh"$' "$HOME/.codex/config.toml"
 grep -q '^\[profiles.terra\]$' "$HOME/.codex/config.toml"
 grep -q '^\[profiles.luna\]$' "$HOME/.codex/config.toml"
 grep -q '^\[profiles.sol-high\]$' "$HOME/.codex/config.toml"

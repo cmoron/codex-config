@@ -81,13 +81,12 @@ declares dans `config.toml`. Les chemins et timestamps de cache ne sont pas vers
 
 ## Modeles
 
-- Defaut : `gpt-5.6-sol` @ `medium`. C'est le point de depart Power recommande pour
-  le travail general, ambigu et les arbitrages. L'objectif est de payer un meilleur
-  premier passage plutot que plusieurs reprises d'un modele moins fort.
+- Defaut : `gpt-5.6-sol` @ `xhigh` pour le travail general, ambigu et les
+  arbitrages.
 - Profil `terra` @ `medium` : implementation bornee, spec claire, travail quotidien
   ou le cout prime davantage que l'ambiguite.
 - Profil `luna` @ `medium` : volume mecanique, recherche, transformations simples.
-- Profil `sol-high` : architecture, securite, debug difficile.
+- Profil `sol-high` : repli Sol moins couteux.
 - `max` reste une escalade ponctuelle apres echec; `ultra` est interdit.
 - `multi_agent` et `multi_agent_v2` sont actifs; `fast_mode` reste desactive.
 - Les workers utilisent `gpt-5.6-terra` @ `medium` par defaut. Le custom agent

@@ -23,10 +23,10 @@ Pour une tache L+, produire un plan explicite, deleguer seulement les lots borne
 
 ## Modeles et effort
 
-- Defaut : `gpt-5.6-sol` @ `medium` pour l'orchestration generale, les demandes ambigues et les arbitrages.
+- Defaut : `gpt-5.6-sol` @ `xhigh` pour l'orchestration generale, les demandes ambigues et les arbitrages.
 - Profil `terra` @ `medium` pour une implementation bornee, clairement specifiee et moins couteuse.
 - Profil `luna` @ `medium` pour le volume mecanique, la recherche et les transformations simples.
-- Profil `sol-high` pour l'architecture, la securite et le debug difficile.
+- Profil `sol-high` pour reduire ponctuellement l'effort de Sol.
 - Sous-agent `worker` : `terra` @ `medium` par defaut; sous-agent `explore` : `luna` @ `medium` en lecture seule.
 - `max` est une escalade ponctuelle apres echec ou pour un probleme exceptionnellement resistant, jamais un defaut permanent.
 - `ultra` est interdit tant qu'il implique du fan-out multi-agent non controle.

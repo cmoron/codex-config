@@ -1,11 +1,10 @@
 # Le multi-agent est actif, mais Fast reste desactive. Les sous-agents ordinaires
 # sont pinnes sur Terra @ medium pour ne pas heriter du cout de l'orchestrateur.
 #
-# Sol @ medium est le defaut Power recommande pour le travail general et ambigu.
-# Monter a high uniquement pour l'architecture, la securite ou le debug difficile;
-# reserver max aux blocages reels, jamais comme cout fixe de chaque session.
+# Sol @ xhigh est le defaut pour l'orchestration generale et les arbitrages.
+# Reserver max aux blocages reels, jamais comme cout fixe de chaque session.
 model = "gpt-5.6-sol"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "xhigh"
 personality = "pragmatic"
 approval_policy = "never"
 sandbox_mode = "danger-full-access"
@@ -51,7 +50,7 @@ model_reasoning_effort = "medium"
 model = "gpt-5.6-luna"
 model_reasoning_effort = "medium"
 
-# Escalade (archi, security, debug dur) : `codex --profile sol-high`.
+# Repli Sol moins couteux : `codex --profile sol-high`.
 [profiles.sol-high]
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
