@@ -58,6 +58,7 @@ Le multi-agent Codex est active. L'agent principal Sol xhigh orchestre, conçoit
 ## Avant de dire que c'est fait
 
 Preuve d'execution obligatoire : tests qui passent, app qui demarre, endpoint qui repond. Si tu ne peux pas verifier toi-meme, dis-le explicitement.
+- Quand le projet fournit des controles locaux pertinents (format, lint, tests, qualimetrie), les executer avant de conclure ; une compilation seule ne les remplace pas.
 
 ## Git
 
