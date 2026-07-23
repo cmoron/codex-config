@@ -19,7 +19,7 @@ Sur-processer une petite tache gaspille du temps et des tokens.
 - **M** (multi-couches ou decisions UX/API a arbitrer) : `superpowers:brainstorming` puis execution inline.
 - **L+** (multi-jours, refactor transverse, migration) : `superpowers:writing-plans`, puis execution sequentielle par lots valides.
 
-`superpowers:subagent-driven-development` est desactive tant que le multi-agent Codex n'est pas fiable. Pour une tache L+, produire un plan explicite, executer inline par lots et demander une validation humaine aux frontieres importantes.
+Pour une tache L+, produire un plan explicite, deleguer seulement les lots bornes et independants, et demander une validation humaine aux frontieres importantes.
 
 ## Modeles et effort
 
@@ -27,18 +27,20 @@ Sur-processer une petite tache gaspille du temps et des tokens.
 - Profil `terra` @ `medium` pour une implementation bornee, clairement specifiee et moins couteuse.
 - Profil `luna` @ `medium` pour le volume mecanique, la recherche et les transformations simples.
 - Profil `sol-high` pour l'architecture, la securite et le debug difficile.
+- Sous-agent `worker` : `terra` @ `medium` par defaut; sous-agent `explore` : `luna` @ `medium` en lecture seule.
 - `max` est une escalade ponctuelle apres echec ou pour un probleme exceptionnellement resistant, jamais un defaut permanent.
 - `ultra` est interdit tant qu'il implique du fan-out multi-agent non controle.
 
 ## Delegation
 
-Le multi-agent Codex est desactive au niveau de `config.toml` (`multi_agent = false`, `multi_agent_v2 = false`) tant que les regressions GPT-5.6 sur le routing, l'heritage modele/effort et le service tier ne sont pas corrigees et verifiees.
+Le multi-agent Codex est active. L'agent principal orchestre, tranche, integre et verifie.
 
-- Ne jamais appeler `spawn_agent`, `send_input`, `wait_agent` ou un workflow qui en depend.
-- Ne jamais utiliser l'effort `ultra`, qui implique du fan-out et des caches isoles.
-- Tout le travail est inline et sequentiel dans la session courante.
-- Le layering par modele est manuel entre sessions : defaut `sol`, profil `terra` pour l'implementation bornee, profil `luna` pour le volume mecanique et profil `sol-high` pour les cas difficiles.
-- Pour isoler une grosse exploration, utiliser une nouvelle session/profil puis rapporter son resume dans la session principale.
+- XS : direct, sans sous-agent.
+- S clairement bornee : deleguer l'implementation a `worker` quand le brief suffit a travailler en autonomie.
+- Exploration read-only bornee : utiliser `explore`.
+- M/L+ : paralleliser seulement deux taches ou plus reellement independantes, puis attendre et synthetiser leurs resultats.
+- Ne jamais faire modifier les memes fichiers par plusieurs agents.
+- `fast_mode` et l'effort `ultra` restent desactives; aucun tier Fast implicite.
 - Deterministe : script, hook ou commande, sans modele du tout.
 
 ## Pendant que tu codes
@@ -109,4 +111,4 @@ Le hook Stop `scripts/reflect-nudge.sh` le rappelle une fois par session si du t
 
 ---
 
-Ces regles fonctionnent si tu poses les questions avant de coder, si les diffs restent scopes, si tu verifies avant de dire fait, et si tu n'actives pas le multi-agent tant que les regressions upstream ne sont pas levees.
+Ces regles fonctionnent si tu poses les questions avant de coder, si les diffs restent scopes, si tu verifies avant de dire fait, et si la delegation reste bornee et observable.

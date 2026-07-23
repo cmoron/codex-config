@@ -49,7 +49,7 @@ cd ~/src/codex-config
 | `skills/*` | `~/.agents/skills/*` (`~/.codex/skills/*` sous Windows) | Skills personnels Codex |
 | `scripts/` | `~/.codex/scripts/` + Windows si detecte | Implementations des hooks et notification |
 | `assets/` | `~/.codex/assets/` + Windows si detecte | MP3 de fin de travail |
-| `agents/` | `~/.codex/agents/` + Windows si detecte | Custom agents dormants tant que le multi-agent est desactive |
+| `agents/` | `~/.codex/agents/` + Windows si detecte | Custom agents specialises |
 
 ## Skills Personnels
 
@@ -89,11 +89,9 @@ declares dans `config.toml`. Les chemins et timestamps de cache ne sont pas vers
 - Profil `luna` @ `medium` : volume mecanique, recherche, transformations simples.
 - Profil `sol-high` : architecture, securite, debug difficile.
 - `max` reste une escalade ponctuelle apres echec; `ultra` est interdit.
-- `multi_agent`, `multi_agent_v2` et `fast_mode` sont explicitement desactives tant
-  que les regressions openai/codex#29940, #30407, #31814 et #32031 ne sont pas
-  corrigees et verifiees sur une release.
-- Les custom agents sous `agents/` restent versionnes mais dormants pour pouvoir
-  retester le layering une fois le harness stabilise.
+- `multi_agent` et `multi_agent_v2` sont actifs; `fast_mode` reste desactive.
+- Les workers utilisent `gpt-5.6-terra` @ `medium` par defaut. Le custom agent
+  `explore` utilise `gpt-5.6-luna` @ `medium` en lecture seule.
 
 ## Statusline
 

@@ -1,8 +1,5 @@
-# GPT-5.6 / Multi-Agent V2 reste instable : les sous-agents peuvent heriter du
-# modele/effort du parent et ont deja consomme du tier Fast sans demande explicite.
-# Le mode multi-agent et Fast sont donc bloques au niveau du harness, pas seulement
-# par instructions. Reevaluer quand openai/codex#29940, #30407, #31814 et #32031
-# seront corriges et verifies sur une release Codex.
+# Le multi-agent est actif, mais Fast reste desactive. Les sous-agents ordinaires
+# sont pinnes sur Terra @ medium pour ne pas heriter du cout de l'orchestrateur.
 #
 # Sol @ medium est le defaut Power recommande pour le travail general et ambigu.
 # Monter a high uniquement pour l'architecture, la securite ou le debug difficile;
@@ -59,11 +56,15 @@ model_reasoning_effort = "medium"
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 
+[agents]
+enabled = true
+default_subagent_model = "gpt-5.6-terra"
+default_subagent_reasoning_effort = "medium"
+
 [features]
-# Garde-fous runtime : ne pas laisser le modele ou le harness lancer des workers
-# tant que le routing et l'heritage du service tier ne sont pas fiables.
-multi_agent = false
-multi_agent_v2 = false
+# Les agents sont disponibles; Fast reste un choix explicite separe.
+multi_agent = true
+multi_agent_v2 = true
 fast_mode = false
 memories = true
 # Superpowers vient du catalogue distant OpenAI. Ne pas l'installer localement :
