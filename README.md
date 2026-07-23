@@ -73,7 +73,7 @@ Les skills Claude dependants de MCPs non configures cote Codex (`linear`,
 `notion`) ne sont pas portes. Les historiques, memoires et caches restent propres
 a chaque produit.
 
-`install.sh` installe les marketplaces Mixedbread, Anthropic et Ponytail dans un
+`install.sh` installe les marketplaces Anthropic et Ponytail dans un
 `CODEX_HOME` temporaire relie aux caches locaux, puis active les plugins compatibles
 declares dans `config.toml`. Les chemins et timestamps de cache ne sont pas versionnes.
 `security-guidance` reste desactive : ses hooks Anthropic utilisent des champs

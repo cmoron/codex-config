@@ -76,12 +76,11 @@ Preuve d'execution obligatoire : tests qui passent, app qui demarre, endpoint qu
 
 | Besoin | Preference | Fallback si indisponible ou en echec |
 | --- | --- | --- |
-| Recherche contenu semantique | `mgrep "query"` | `rg`, puis recherche integree |
 | Recherche regex/litterale | `rg` | recherche integree |
 | Recherche structure multi-lignes | `ast-grep` / `sg` | lecture ciblee |
 | Recherche fichiers | `fd` | `rg --files`, puis glob |
 | Explorer un fichier inconnu de plus de 200 lignes | lecture ciblee par sections | `rtk read`, puis `sed`/`rg` cible |
-| Web | `mgrep --web --answer` | recherche web ciblee, en prevenant |
+| Web | recherche web ciblee | source officielle directe |
 | Documentation de bibliotheque | plugin `context7` | web sur la source officielle |
 | Extraction JSON/YAML | `jq` / `yq` | parseur structure, jamais un dump massif |
 

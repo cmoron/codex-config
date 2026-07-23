@@ -159,12 +159,10 @@ bootstrap_plugins() {
 
     export CODEX_HOME="$bootstrap_home"
 
-    codex plugin marketplace upgrade Mixedbread-Grep >/dev/null
     codex plugin marketplace upgrade claude-plugins-official >/dev/null
     codex plugin marketplace upgrade ponytail >/dev/null
 
     for plugin in \
-      mgrep@Mixedbread-Grep \
       clangd-lsp@claude-plugins-official \
       claude-code-setup@claude-plugins-official \
       claude-md-management@claude-plugins-official \

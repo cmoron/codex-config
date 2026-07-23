@@ -75,10 +75,6 @@ remote_plugin = true
 generate_memories = true
 use_memories = true
 
-[marketplaces.Mixedbread-Grep]
-source_type = "git"
-source = "https://github.com/mixedbread-ai/mgrep.git"
-
 [marketplaces.claude-plugins-official]
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
@@ -87,9 +83,6 @@ source = "https://github.com/anthropics/claude-plugins-official.git"
 source_type = "git"
 source = "https://github.com/DietrichGebert/ponytail.git"
 ref = "main"
-
-[plugins."mgrep@Mixedbread-Grep"]
-enabled = true
 
 [plugins."clangd-lsp@claude-plugins-official"]
 enabled = true
