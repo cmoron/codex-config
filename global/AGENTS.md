@@ -23,24 +23,28 @@ Pour une tache L+, produire un plan explicite, deleguer seulement les lots borne
 
 ## Modeles et effort
 
-- Defaut : `gpt-5.6-sol` @ `xhigh` pour l'orchestration generale, les demandes ambigues et les arbitrages.
-- Profil `terra` @ `medium` pour une implementation bornee, clairement specifiee et moins couteuse.
-- Profil `luna` @ `medium` pour le volume mecanique, la recherche et les transformations simples.
+- Defaut : `gpt-5.6-sol` @ `xhigh` pour l'orchestration, l'architecture, les demandes ambigues, les decisions techniques dimensionnantes ou pointues et toute implementation jugee critique.
+- Profil `terra` @ `high` pour une implementation bornee, clairement specifiee, non critique et moins couteuse.
+- Profil `luna` @ `high` pour le volume mecanique, la recherche et les transformations simples.
 - Profil `sol-high` pour reduire ponctuellement l'effort de Sol.
-- Sous-agent `worker` : `terra` @ `medium` par defaut; sous-agent `explore` : `luna` @ `medium` en lecture seule.
-- `max` est une escalade ponctuelle apres echec ou pour un probleme exceptionnellement resistant, jamais un defaut permanent.
-- `ultra` est interdit tant qu'il implique du fan-out multi-agent non controle.
+- Sous-agent `worker` : `terra` @ `high` par defaut; sous-agent `explore` : `luna` @ `high` en lecture seule.
+- Sous-agent `critical` : `sol` @ `xhigh` pour toute implementation critique ou risquee.
+- `max` est une escalade ponctuelle pour un probleme profond et indivisible qui resiste a `xhigh`, jamais un defaut permanent.
+- Sous-agent `super-joker` : `sol` @ `ultra`, uniquement apres un blocage concret de l'orchestrateur `xhigh` et si le probleme beneficie d'un fan-out borne.
 
 ## Delegation
 
-Le multi-agent Codex est active. L'agent principal orchestre, tranche, integre et verifie.
+Le multi-agent Codex est active. L'agent principal Sol xhigh orchestre, conçoit l'architecture, prend les decisions techniques dimensionnantes ou pointues, integre et verifie.
 
 - XS : direct, sans sous-agent.
-- S clairement bornee : deleguer l'implementation a `worker` quand le brief suffit a travailler en autonomie.
+- S clairement bornee et non critique : deleguer l'implementation a `worker` quand le brief suffit a travailler en autonomie.
+- Implementation critique ou risquee : conserver le travail dans l'agent principal ou utiliser `critical`; jamais `worker` ou `explore`.
 - Exploration read-only bornee : utiliser `explore`.
 - M/L+ : paralleliser seulement deux taches ou plus reellement independantes, puis attendre et synthetiser leurs resultats.
+- Les sous-agents produisent du travail et des preuves; l'agent principal reste l'arbitre des choix d'architecture.
 - Ne jamais faire modifier les memes fichiers par plusieurs agents.
-- `fast_mode` et l'effort `ultra` restent desactives; aucun tier Fast implicite.
+- Apres un blocage `xhigh`, utiliser `max` si le probleme est indivisible ou `super-joker` s'il se decompose proprement; revenir ensuite a l'orchestrateur `xhigh`.
+- `fast_mode` reste desactive; aucun tier Fast implicite.
 - Deterministe : script, hook ou commande, sans modele du tout.
 
 ## Pendant que tu codes

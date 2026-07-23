@@ -81,16 +81,18 @@ declares dans `config.toml`. Les chemins et timestamps de cache ne sont pas vers
 
 ## Modeles
 
-- Defaut : `gpt-5.6-sol` @ `xhigh` pour le travail general, ambigu et les
-  arbitrages.
-- Profil `terra` @ `medium` : implementation bornee, spec claire, travail quotidien
-  ou le cout prime davantage que l'ambiguite.
-- Profil `luna` @ `medium` : volume mecanique, recherche, transformations simples.
+- Defaut : `gpt-5.6-sol` @ `xhigh` pour l'orchestration, l'architecture, les
+  arbitrages pointus et toute implementation critique.
+- Profil `terra` @ `high` : implementation bornee, non critique et clairement
+  specifiee.
+- Profil `luna` @ `high` : volume mecanique, recherche, transformations simples.
 - Profil `sol-high` : repli Sol moins couteux.
-- `max` reste une escalade ponctuelle apres echec; `ultra` est interdit.
+- `max` traite un blocage profond et indivisible. Le custom agent `super-joker`
+  utilise Sol `ultra` uniquement apres un blocage `xhigh` decomposable.
 - `multi_agent` et `multi_agent_v2` sont actifs; `fast_mode` reste desactive.
-- Les workers utilisent `gpt-5.6-terra` @ `medium` par defaut. Le custom agent
-  `explore` utilise `gpt-5.6-luna` @ `medium` en lecture seule.
+- Les workers utilisent `gpt-5.6-terra` @ `high` par defaut. Le custom agent
+  `critical` garantit Sol `xhigh` pour l'implementation sensible; `explore`
+  utilise `gpt-5.6-luna` @ `high` en lecture seule.
 
 ## Statusline
 
@@ -145,7 +147,9 @@ macOS, WSL2 et fallback terminal bell.
 .
 ├── AGENTS.md
 ├── agents/
-│   └── explore.toml
+│   ├── critical.toml
+│   ├── explore.toml
+│   └── super-joker.toml
 ├── global/
 │   └── AGENTS.md
 ├── config.toml
